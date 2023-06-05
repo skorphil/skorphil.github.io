@@ -545,7 +545,7 @@
         },
         "card-31": {
             "answer": 1,
-            "img": "1/figures/fileoutpart19.png",
+            "img": "1/figures/fileoutpart21.png",
             "options": [
                 "Водитель легкового автомобиля.",
                 "Водитель грузового автомобиля."
@@ -554,7 +554,7 @@
         },
         "card-32": {
             "answer": 1,
-            "img": "1/figures/fileoutpart19.png",
+            "img": "1/figures/fileoutpart23.png",
             "options": [
                 "Водитель автомобиля.",
                 "Водитель трамвая."
@@ -572,7 +572,7 @@
         },
         "card-34": {
             "answer": 2,
-            "img": "1/figures/fileoutpart19.png",
+            "img": "1/figures/fileoutpart22.png",
             "options": [
                 "В   о  д  и  т е  л  ь   а  в  т  о  б  у  с а  .",
                 "Водитель автомобиля."
