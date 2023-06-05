@@ -1,0 +1,16 @@
+.question {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+main.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.question-card {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 400px;
+}/*# sourceMappingURL=styles.css.map */
