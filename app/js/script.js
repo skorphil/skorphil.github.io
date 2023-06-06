@@ -18,6 +18,7 @@ function showCurrentCard() {
 
   // Create question element
   const questionElement = document.createElement('p');
+  questionElement.classList.add('question');
   questionElement.textContent = cardData.question;
   quizContainer.appendChild(questionElement);
 
