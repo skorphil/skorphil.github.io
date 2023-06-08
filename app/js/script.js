@@ -6,57 +6,6 @@ function saveCurrentCard() {
   localStorage.setItem('currentCardIndex', currentCardIndex);
 }
 
-
-
-
-// Function to show the current card
-function showCurrentCard() {
-  // Retrieve the current card index from localStorage if it exists
-  const storedCardIndex = localStorage.getItem('currentCardIndex');
-  if (storedCardIndex !== null) {
-    currentCardIndex = parseInt(storedCardIndex);
-  }
-
-  const cardKey = Object.keys(quizData)[currentCardIndex];
-  const cardData = quizData[cardKey];
-
-  // Clear previous card
-  quizContainer.innerHTML = '';
-
-
-
-  // Create img element
-  if (cardData.img) {
-    const imageElement = document.createElement('img');
-    imageElement.src = 'app/content/' + cardData.img;
-    quizContainer.appendChild(imageElement);
-  }
-
-  // Create question element
-  const questionElement = document.createElement('p');
-  questionElement.classList.add('question'); // Replace 'className' with the name of the class you want to add
-  questionElement.textContent = cardData.question;
-  quizContainer.appendChild(questionElement);
-
-  // Create options
-  cardData.options.forEach((option, index) => {
-    const optionContainer = document.createElement('fieldset');
-
-    const radioInput = document.createElement('input');
-    radioInput.type = 'radio';
-    radioInput.name = `${cardKey}`;
-    radioInput.value = index;
-
-    const optionLabel = document.createElement('label');
-    optionLabel.textContent = option;
-
-    optionContainer.appendChild(radioInput);
-    optionContainer.appendChild(optionLabel);
-
-    quizContainer.appendChild(optionContainer);
-  });
-}
-
 // Function to check the current card
 function checkCard() {
   const cardKey = Object.keys(quizData)[currentCardIndex];
@@ -89,6 +38,7 @@ function checkCard() {
     } else {
       // Show the Next button only for wrong answers
       if (!document.getElementById('nextButton')) {
+        checkButton.parentNode.removeChild(checkButton);
         const nextButton = document.createElement('button');
         nextButton.id = 'nextButton';
         nextButton.className = 'button';
@@ -104,9 +54,73 @@ function checkCard() {
   }
 }
 
+// Function to show the current card
+function showCurrentCard() {
+  // Retrieve the current card index from localStorage if it exists
+  const storedCardIndex = localStorage.getItem('currentCardIndex');
+  if (storedCardIndex !== null) {
+    currentCardIndex = parseInt(storedCardIndex);
+  }
+
+  const cardKey = Object.keys(quizData)[currentCardIndex];
+  const cardData = quizData[cardKey];
+
+  // Clear previous card
+  quizContainer.innerHTML = '';
+
+  // Create meta-element
+  const metaElement = document.createElement('p');
+  metaElement.textContent = `Question: ${currentCardIndex}, Group: ${cardData.group}`;
+  quizContainer.appendChild(metaElement);
 
 
+  // Create img element
+  if (cardData.img) {
+    const imageElement = document.createElement('img');
+    imageElement.src = 'app/content/' + cardData.img;
+    quizContainer.appendChild(imageElement);
+  }
 
+  // Create question element
+  const questionElement = document.createElement('p');
+  questionElement.classList.add('question'); // Replace 'className' with the name of the class you want to add
+  questionElement.textContent = cardData.question;
+  quizContainer.appendChild(questionElement);
+
+  // Create options
+  cardData.options.forEach((option, index) => {
+    const optionContainer = document.createElement('fieldset');
+
+    const radioInput = document.createElement('input');
+    radioInput.type = 'radio';
+    radioInput.name = `${cardKey}`;
+    radioInput.value = index;
+
+    const optionLabel = document.createElement('label');
+    optionLabel.textContent = option;
+
+    optionContainer.appendChild(radioInput);
+    optionContainer.appendChild(optionLabel);
+
+    quizContainer.appendChild(optionContainer);
+  });
+
+  // Create button to check answer
+  const checkButton = document.createElement('button');
+  checkButton.id = 'checkButton';
+  checkButton.className = 'button';
+  checkButton.textContent = 'Check';
+  checkButton.addEventListener('click', checkCard);
+  document.getElementById('quizContainer').appendChild(checkButton); document.getElementById('quizContainer').appendChild(checkButton);
+
+  // Create comment field
+  if (cardData.comment) {
+    const commentElement = document.createElement('p');
+    commentElement.textContent = JSON.parse(cardData.comment);
+    quizContainer.appendChild(commentElement);
+  }
+
+}
 
 // Function to show the next card
 function showNextCard() {
@@ -157,7 +171,7 @@ fetch('app/content/cards.json')
     showCurrentCard();
 
     // Add event listener to the Check button
-    checkButton.addEventListener('click', checkCard);
+
   })
   .catch(error => {
     console.error('Error fetching quiz data:', error);
