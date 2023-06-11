@@ -9,28 +9,9 @@ var isRandomAll = false
 var answeredCardsAll = {}
 var remainingCards = {}
 
-checkAnsweredCardsLocalStorage()
-function checkAnsweredCardsLocalStorage() {
-  if (localStorage.getItem('answeredCardsAll') !== null) {
-    answeredCardsAll = JSON.parse(localStorage.getItem('answeredCardsAll'));
-  }
-}
-
 const allErrors = {}
 
 const optionListeners = [];
-
-
-fetch('app/content/cards.json')
-  .then(response => response.json())
-  .then(jsonData => {
-    allCards = jsonData;
-    startApp()
-  })
-  .catch(error => {
-    console.error('Error fetching quiz data:', error);
-  });
-
 
 // Starting the app in desired mode
 function startApp(appMode) {
@@ -255,3 +236,20 @@ function drawCardList(appMode = 'all') {
     }
   }
 }
+
+checkAnsweredCardsLocalStorage()
+function checkAnsweredCardsLocalStorage() {
+  if (localStorage.getItem('answeredCardsAll') !== null) {
+    answeredCardsAll = JSON.parse(localStorage.getItem('answeredCardsAll'));
+  }
+}
+
+fetch('app/content/cards.json')
+  .then(response => response.json())
+  .then(jsonData => {
+    allCards = jsonData;
+    startApp()
+  })
+  .catch(error => {
+    console.error('Error fetching quiz data:', error);
+  });
