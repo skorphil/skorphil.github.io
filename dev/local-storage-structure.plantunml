@@ -4,23 +4,14 @@ localStorage
 
 @startjson
 {
-    "user": "Orange Panda",
-    "questionsMarathon": {
-        "1": {
-            "isCorrect": "True",
-            "answered" : "20.02.2023"
-        },
-         "2": {
-            "isCorrect": "False",
-            "answered" : "20.02.2023"
-        }
-        
+    "answeredCardsAll": {
+        "1": [0, false],
+        "2": [1, true]    
     },
-    "currentQuestionMarathon": "3"    
-
+    "currentCardAll": 3,
+    "currentAppMode": "all/error",
+    "isRandomAll": true  
 }
-
-
 @endjson
 
 @startjson
