@@ -9,6 +9,7 @@ var isRandomAll = false
 var answeredCardsAll = {}
 var remainingCards = {}
 
+checkAnsweredCardsLocalStorage()
 function checkAnsweredCardsLocalStorage() {
   if (localStorage.getItem('answeredCardsAll') !== null) {
     answeredCardsAll = JSON.parse(localStorage.getItem('answeredCardsAll'));
@@ -164,6 +165,7 @@ function drawCurrentCard(cardNumber = getCurrentCard()) {
 
     // If this is unanswered card, we add listener. If it's already answered, we disable hover
     if (currentAppMode === 'all' && answeredCardsAll.hasOwnProperty(currentCardAll.toString())) {
+      console.log('question being answered')
       optionElement.classList.add('disable-hover');
     } else if (currentAppMode === 'all' && answeredCardsAll.hasOwnProperty(currentCardAll) === false) {
       optionElement.addEventListener('click', optionListener);
