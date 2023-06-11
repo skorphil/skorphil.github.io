@@ -1,0 +1,65 @@
+
+localStorage
+============
+
+@startjson
+{
+    "user": "Orange Panda",
+    "questionsMarathon": {
+        "1": {
+            "isCorrect": "True",
+            "answered" : "20.02.2023"
+        },
+         "2": {
+            "isCorrect": "False",
+            "answered" : "20.02.2023"
+        }
+        
+    },
+    "currentQuestionMarathon": "3"    
+
+}
+
+
+@endjson
+
+@startjson
+{
+    "user": "Orange Panda",
+    "questionsMarathon": [
+        {
+            "id": "1",
+            "isCorrect": "True",
+            "answered" : "20.02.2023"
+        },
+        {
+            "id": "2",
+            "isCorrect": "False",
+            "answered" : "20.02.2023"
+        }
+    ],
+    "currentQuestionMarathon": "3"
+}
+@endjson
+
+cards.json
+==========
+
+@startjson
+{
+    "1": {
+        "question": "Text of question",
+        "answer": "1",
+        "options": ["otion 1", "otion 2", "..."],
+        "group": "1",
+        "comment": "Comment text",
+        "hint": "Link to Law if wrong answer"
+    },
+    "2": {
+        "question": "Text of question",
+        "answer": "3",
+        "options": ["otion 1", "otion 2", "..."],
+        "group": "1"
+    }
+}
+@endjson

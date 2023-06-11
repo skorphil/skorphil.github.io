@@ -14,3 +14,59 @@ main.container {
   flex-direction: column;
   flex-basis: 400px;
 }
+
+.singleOption {
+  display: flex;
+  padding: 12px 20px;
+}
+
+.singleOption:hover {
+  background-color: aquamarine;
+  cursor: pointer;
+
+}
+
+.singleOption.error {
+  background-color: red;
+}
+
+.singleOption.correct {
+  background-color: green;
+}
+
+.disable-hover {
+  pointer-events: none;
+}
+
+#card-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  // align-content: flex-start;
+  justify-content: flex-start;
+}
+
+.card-link {
+  flex-basis: 38px;
+  flex-shrink: 0;
+  flex-grow: 1;
+  height: 38px;
+  margin: 4px;
+  // margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
+}
+
+.card-link.current {
+  background-color: azure;
+}
+
+.card-link.answered-correct {
+  background-color: green;
+}
+
+.card-link.answered-wrong {
+  background-color: red;
+}
