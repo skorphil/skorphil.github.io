@@ -20,7 +20,8 @@ function startApp(appMode) {
   if (appMode === 'all' || appMode === 'error') {
     currentAppMode = appMode;
   } // If no appMode passed, we check if there are saved appMode in localStorage
-  else if (localStorage.getItem('currentAppMode') === 'all' || localStorage.getItem('currentAppMode') === 'error') {
+  else if (localStorage.getItem('currentAppMode') === 'all'
+    || localStorage.getItem('currentAppMode') === 'error') {
     currentAppMode = localStorage.getItem('currentAppMode');
   }
 
@@ -116,7 +117,8 @@ function drawCurrentCard(cardNumber = getCurrentCard()) {
 
   // Create meta-element
   const metaElement = document.createElement('p');
-  metaElement.textContent = `Question: ${cardContent.numberPerGroup}, Group: ${cardContent.group}`;
+  metaElement.textContent =
+    `Question: ${cardContent.numberPerGroup}, Group: ${cardContent.group}`;
   quizContainer.appendChild(metaElement);
 
   // Create img element
@@ -217,15 +219,45 @@ function drawCardList(appMode = 'all') {
 
   document.getElementById('card-list-container').innerHTML = '';
 
+  // Draw bar with groups
+  document.getElementById('group-bar').innerHTML = '';
+
+  const groupNumbers = [...new Set(Object.values(allCards).map(item => item.group))];
+  groupNumbers.forEach((group) => {
+    const groupLinkElement = document.createElement('div');
+    groupLinkElement.textContent = group;
+    groupLinkElement.classList.add('group-link', 'tab');
+    groupLinkElement.setAttribute('data-tabs', `group-${group}`);
+    document.getElementById('group-bar').appendChild(groupLinkElement);
+
+    console.log(group);
+    console.log(parseInt(allCards[currentCardAll].group));
+
+
+    if (group === parseInt(allCards[currentCardAll].group)) {
+      groupLinkElement.classList.add('active')
+    }
+  });
+  // Apply style to currently active tab
+
+
+
 
   for (const key in allCards) {
     const cardLinkElement = document.createElement('div');
     cardLinkElement.textContent = allCards[key]['numberPerGroup'];
-    cardLinkElement.className = 'card-link';
-    document.getElementById('card-list-container').appendChild(cardLinkElement);
+    cardLinkElement.classList.add('card-link', `group-${allCards[key].group}`);
     cardLinkElement.addEventListener('click', function () { drawCurrentCard(key) });
     // console.log(typeof (key))
+
     // console.log(typeof (currentCardAll))
+
+    console.log(`${allCards[key]['group']} и ${allCards[currentCardAll]['group']}`)
+
+    if (allCards[key]['group'] !== allCards[currentCardAll]['group']) {
+      cardLinkElement.style.display = "none";
+    };
+
     if (parseInt(currentCardAll) === parseInt(key)) {
       cardLinkElement.classList.add('current');
     }
@@ -234,8 +266,39 @@ function drawCardList(appMode = 'all') {
     } else if (answeredCardsAll.hasOwnProperty(key.toString()) && answeredCardsAll[key][1] == false) {
       cardLinkElement.classList.add('answered-wrong')
     }
+    document.getElementById('card-list-container').appendChild(cardLinkElement);
+
   }
+  var groupLinks = document.querySelectorAll(".group-link");
+  console.log(groupLinks)
+  var cardLinks = document.querySelectorAll(".card-link");
+  console.log(cardLinks)
+
+
+  groupLinks.forEach((tab) => {
+    console.log(`each tab :${tab}`)
+    tab.addEventListener("click", () => {
+      groupLinks.forEach((tab1) => {
+        tab1.classList.remove("active");
+      })
+      tab.classList.add("active");
+      var tabval = tab.getAttribute("data-tabs");
+
+      cardLinks.forEach((item) => {
+        item.style.display = "none";
+      })
+      var cardsInGroup = document.querySelectorAll(`.${tabval}`)
+      console.log(`cards in group :${cardsInGroup}`)
+      cardsInGroup.forEach((card) => {
+        card.style.display = "flex"
+        console.log(card)
+      })
+    })
+  })
+
 }
+
+
 
 checkAnsweredCardsLocalStorage()
 function checkAnsweredCardsLocalStorage() {
@@ -253,3 +316,4 @@ fetch('app/content/cards.json')
   .catch(error => {
     console.error('Error fetching quiz data:', error);
   });
+

@@ -4,13 +4,14 @@ localStorage
 
 @startjson
 {
-    "answeredCardsAll": {
-        "1": [0, false],
-        "2": [1, true]    
+    "answeredCardsAll (list of answered questions)": {
+        "1 (number of question)": ["0 (id of answered option)", "false (is correct?)", "true (is answered later?)"],
+        "3": [1, true, "NaN"],
+        "120": [3, false, "NaN"]    
     },
-    "currentCardAll": 3,
-    "currentAppMode": "all/error",
-    "isRandomAll": true  
+    "currentCardAll (Number of current card in 'all' mode)": 3,
+    "currentAppMode (Current mode of app)": "all/error",
+    "isRandomAll (is next question being randomly chosen in 'all' mode)": true  
 }
 @endjson
 

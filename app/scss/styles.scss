@@ -7,6 +7,7 @@ main.container {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  padding: 0;
 }
 
 .question-card {
@@ -44,19 +45,24 @@ main.container {
   flex-direction: row;
   // align-content: flex-start;
   justify-content: flex-start;
+  padding: 8px
 }
 
 .card-link {
-  flex-basis: 38px;
+  flex-basis: 36px;
   flex-shrink: 0;
-  flex-grow: 1;
-  height: 38px;
-  margin: 4px;
+  flex-grow: 0;
+  height: 36px;
+  margin: calc((100% - (36px * 8)) / 16);
   // margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: blue;
+  // background-color: blue;
+}
+
+.card-link:hover {
+  background-color: grey;
 }
 
 .card-link.current {
@@ -68,5 +74,39 @@ main.container {
 }
 
 .card-link.answered-wrong {
-  background-color: red;
+  background-color: transparent;
+  border: 2px solid red;
+  border-radius: 80px;
+}
+
+header {
+  padding: 8px;
+}
+
+.tab-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.081);
+}
+
+.tab {
+  height: 48px;
+}
+
+.tab:hover {
+  background-color: grey;
+}
+
+.tab.active {
+  border-bottom: 4px solid blue;
+}
+
+.group-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 20%;
+  flex-shrink: 0;
 }
