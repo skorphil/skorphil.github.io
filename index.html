@@ -6,20 +6,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Road Rules Armenia</title>
-  <!-- <link rel="stylesheet" href="styles.css"> -->
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <link rel="stylesheet" href="app/scss/styles.css">
 </head>
 
 <body>
   <main class="container">
+    <div id="nav-bar" class="tab-bar">
+      <div class="tab nav-link">Все вопросы</div>
+      <div class="tab nav-link">Ошибки</div>
+
+    </div>
+    <div id="image-container"></div>
     <div class="question-card">
-      <p>Альфа версия - в некоторых вопросах могут быть перепутаны иллюстрации</p>
-      <div id="quizContainer"></div>
-      <h2>Все вопросы</h2>
-      <div id="group-bar" class="tab-bar"></div>
-      <div id="card-list-container">
+      <div class="question-container">
+        <div id="question-id"></div>
+        <div id="question"></div>
       </div>
+      <div id="quizContainer"></div>
+      <div id="next-button-container">
+        <button id="nextButton" class="disabled">Следующий</button>
+        <!-- <input type="checkbox" id="myCheckbox" name="myCheckbox" value="true">
+        <label for="myCheckbox">Случайный порядок вопросов</label> -->
+      </div>
+    </div>
+    <h2>Все вопросы</h2>
+    <div id="group-bar" class="tab-bar"></div>
+    <div id="card-list-container">
     </div>
   </main>
   <script src="app/js/script.js"></script>

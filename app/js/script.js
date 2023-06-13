@@ -12,6 +12,11 @@ var remainingCards = {}
 const allErrors = {}
 
 const optionListeners = [];
+const nextButtonListener = function () {
+  drawCurrentCard(getNextCard())
+  nextButton.removeEventListener('click', nextButtonListener)
+  nextButton.classList.add('disabled');
+}
 
 // Starting the app in desired mode
 function startApp(appMode) {
@@ -108,7 +113,7 @@ function getNextCard(appMode = currentAppMode) {
 
 
 function drawCurrentCard(cardNumber = getCurrentCard()) {
-
+  nextButton.classList.add('disabled')
   optionListeners.length = 0
   currentCardAll = cardNumber
   localStorage.setItem('currentCardAll', cardNumber);
@@ -116,23 +121,27 @@ function drawCurrentCard(cardNumber = getCurrentCard()) {
   cardContent = allCards[cardNumber]
 
   // Create meta-element
-  const metaElement = document.createElement('p');
+  const metaElement = document.getElementById('question-id')
+  metaElement.innerHTML = '';
+  // const metaElement = document.createElement('p');
   metaElement.textContent =
-    `Question: ${cardContent.numberPerGroup}, Group: ${cardContent.group}`;
-  quizContainer.appendChild(metaElement);
+    `Г${cardContent.group}, В${cardContent.numberPerGroup}`;
+  // document.getElementById('question-id').appendChild(metaElement);
 
   // Create img element
+  document.getElementById('image-container').innerHTML = '';
   if (cardContent.img) {
     const imageElement = document.createElement('img');
     imageElement.src = 'app/content/' + cardContent.img;
-    quizContainer.appendChild(imageElement);
+    document.getElementById('image-container').appendChild(imageElement);
   }
 
   // Create question element
-  const questionElement = document.createElement('p');
-  questionElement.classList.add('question'); // Replace 'className' with the name of the class you want to add
-  questionElement.textContent = cardContent.question;
-  quizContainer.appendChild(questionElement);
+  question.innerHTML = ''
+  // const questionElement = document.createElement('p');
+  // questionElement.classList.add('question'); // Replace 'className' with the name of the class you want to add
+  question.textContent = cardContent.question;
+  // quizContainer.appendChild(questionElement);
 
   // Create options
   cardContent.options.forEach((option, index) => {
@@ -157,20 +166,28 @@ function drawCurrentCard(cardNumber = getCurrentCard()) {
   })
 
   if (currentAppMode === 'all' && answeredCardsAll.hasOwnProperty(currentCardAll)) {
-    const nextButton = document.createElement('button');
-    nextButton.id = 'nextButton';
-    nextButton.className = 'button';
-    nextButton.textContent = 'Next';
-    nextButton.addEventListener('click', function () { drawCurrentCard(getNextCard()) });
-    document.getElementById('quizContainer').appendChild(nextButton);
+    // const nextButton = document.createElement('button');
+    // nextButton.id = 'nextButton';
+    // nextButton.className = 'button';
+    // nextButton.textContent = 'Next';
+
+    nextButton.classList.remove('disabled')
+    nextButton.addEventListener('click', nextButtonListener);
+
+
+
+
+    // document.getElementById('quizContainer').appendChild(nextButton);
     if (answeredCardsAll[currentCardAll][1] === false) {
       console.log('currentCardAll is in answeredCardsAll and wrong')
       document.getElementById(answeredCardsAll[currentCardAll][0]).classList.add('error');
       document.getElementById(parseInt(allCards[currentCardAll]['answer']) - 1).classList.add('correct');
 
+
     } else if (answeredCardsAll[currentCardAll][1] === true) {
       console.log('currentCardAll is in answeredCardsAll and correct')
       document.getElementById(answeredCardsAll[currentCardAll][0]).classList.add('correct');
+
     }
   }
   drawCardList()
@@ -206,13 +223,9 @@ function checkAnswer(selected_option, card) {
   });
   optionListeners.length = 0
 
-  // Draw next button
-  const nextButton = document.createElement('button');
-  nextButton.id = 'nextButton';
-  nextButton.className = 'button';
-  nextButton.textContent = 'Next';
-  nextButton.addEventListener('click', function () { drawCurrentCard(getNextCard()) });
-  document.getElementById('quizContainer').appendChild(nextButton);
+  nextButton.addEventListener('click', nextButtonListener);
+  nextButton.classList.remove('disabled')
+
 }
 
 function drawCardList(appMode = 'all') {
@@ -233,26 +246,20 @@ function drawCardList(appMode = 'all') {
     console.log(group);
     console.log(parseInt(allCards[currentCardAll].group));
 
-
     if (group === parseInt(allCards[currentCardAll].group)) {
       groupLinkElement.classList.add('active')
     }
   });
-  // Apply style to currently active tab
 
-
-
-
+  // Draw card links grid
   for (const key in allCards) {
     const cardLinkElement = document.createElement('div');
     cardLinkElement.textContent = allCards[key]['numberPerGroup'];
     cardLinkElement.classList.add('card-link', `group-${allCards[key].group}`);
     cardLinkElement.addEventListener('click', function () { drawCurrentCard(key) });
     // console.log(typeof (key))
-
     // console.log(typeof (currentCardAll))
-
-    console.log(`${allCards[key]['group']} и ${allCards[currentCardAll]['group']}`)
+    // console.log(`${allCards[key]['group']} и ${allCards[currentCardAll]['group']}`)
 
     if (allCards[key]['group'] !== allCards[currentCardAll]['group']) {
       cardLinkElement.style.display = "none";
@@ -267,14 +274,15 @@ function drawCardList(appMode = 'all') {
       cardLinkElement.classList.add('answered-wrong')
     }
     document.getElementById('card-list-container').appendChild(cardLinkElement);
-
   }
+
+  // Declare vars for list of group tabs and list of card links
   var groupLinks = document.querySelectorAll(".group-link");
   console.log(groupLinks)
   var cardLinks = document.querySelectorAll(".card-link");
   console.log(cardLinks)
 
-
+  // Assign listeners to all group tabs
   groupLinks.forEach((tab) => {
     console.log(`each tab :${tab}`)
     tab.addEventListener("click", () => {
@@ -284,6 +292,7 @@ function drawCardList(appMode = 'all') {
       tab.classList.add("active");
       var tabval = tab.getAttribute("data-tabs");
 
+      // Make visible only cards from currently selected group
       cardLinks.forEach((item) => {
         item.style.display = "none";
       })
@@ -295,9 +304,7 @@ function drawCardList(appMode = 'all') {
       })
     })
   })
-
 }
-
 
 
 checkAnsweredCardsLocalStorage()
