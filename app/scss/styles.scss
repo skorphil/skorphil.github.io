@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #question {
   font-weight: bold;
 }
@@ -138,4 +142,9 @@ header {
   align-items: center;
   flex-basis: 20%;
   flex-shrink: 0;
+}
+
+h2 {
+  padding: 12px 16px;
+  margin: 0px;
 }
