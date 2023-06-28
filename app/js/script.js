@@ -319,7 +319,7 @@ fetch('app/content/cards.json')
 
 function downloadVariableAsFile(variable, filename) {
   // Convert the variable to a JSON string
-  var jsonData = JSON.stringify(variable);
+  var jsonData = variable;
 
   // Create a new Blob object with the JSON data
   var blob = new Blob([jsonData], { type: 'application/json' });
@@ -328,7 +328,7 @@ function downloadVariableAsFile(variable, filename) {
   var button = document.createElement('button');
 
   // Set the button's attributes
-  button.innerHTML = 'Download';
+  button.innerHTML = 'Download progress';
   button.addEventListener('click', function () {
     // Create a temporary URL for the Blob object
     var url = URL.createObjectURL(blob);
