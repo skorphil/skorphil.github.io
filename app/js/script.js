@@ -317,3 +317,46 @@ fetch('app/content/cards.json')
     console.error('Error fetching quiz data:', error);
   });
 
+function downloadVariableAsFile(variable, filename) {
+  // Convert the variable to a JSON string
+  var jsonData = JSON.stringify(variable);
+
+  // Create a new Blob object with the JSON data
+  var blob = new Blob([jsonData], { type: 'application/json' });
+
+  // Create a new button element
+  var button = document.createElement('button');
+
+  // Set the button's attributes
+  button.innerHTML = 'Download';
+  button.addEventListener('click', function () {
+    // Create a temporary URL for the Blob object
+    var url = URL.createObjectURL(blob);
+
+    // Create a new anchor element
+    var anchor = document.createElement('a');
+
+    // Set the anchor's attributes
+    anchor.href = url;
+    anchor.download = filename;
+
+    // Append the anchor to the body
+    document.body.appendChild(anchor);
+
+    // Click the anchor to trigger the download
+    anchor.click();
+
+    // Remove the anchor from the body
+    document.body.removeChild(anchor);
+
+    // Revoke the temporary URL to free up memory
+    URL.revokeObjectURL(url);
+  });
+
+  // Append the button to the body
+  document.body.appendChild(button);
+}
+
+
+var myVariableLocal = localStorage.getItem('answeredCardsAll');
+downloadVariableAsFile(myVariableLocal, 'myVariable.json');
