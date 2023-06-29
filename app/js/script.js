@@ -360,3 +360,18 @@ function downloadVariableAsFile(variable, filename) {
 
 var myVariableLocal = localStorage.getItem('answeredCardsAll');
 downloadVariableAsFile(myVariableLocal, 'myVariable.json');
+
+function handleFileUpload(event) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    var jsonContent = e.target.result;
+    var jsonData = JSON.parse(jsonContent);
+    console.log(jsonData);
+    // Use jsonData as needed
+    localStorage.setItem('answeredCardsAll', jsonContent);
+  };
+
+  reader.readAsText(file);
+}
