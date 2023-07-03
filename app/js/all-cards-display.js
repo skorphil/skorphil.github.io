@@ -10,7 +10,6 @@
  * @param {number} [cardContent.chosenOption]
  * @return {void} Nothing
  */
-
 function drawCard(cardContent) {
 
   const nextUnansweredButton = document.getElementById('next-unanswered-button')
@@ -49,7 +48,7 @@ function drawCard(cardContent) {
     // If card was not answered, add listeners
     if (cardContent.chosenOption == undefined) {
       optionElement.classList.remove('disable-hover');
-      // add content to access from js (optionIndex)
+      // TODO add content to access from js (optionIndex)
       const optionListener = function () {
         console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
         answerCard(cardContent.id, optionIndex, answeredCards = getAnsweredCards(), allCards)
@@ -75,47 +74,63 @@ function drawCard(cardContent) {
 
 function nextButtonListener() {
   const nextCardId = getNextUnansweredId(allCards, getAnsweredCards())
-
   if (nextCardId) {
-    drawCard(getContentForCard(nextCardId, allCards, getAnsweredCards()))
+    drawNewPage(nextCardId, allCards, answeredCards = getAnsweredCards())
   } else throw console.error(`Wrong card ID: ${nextCardId}`);
 }
 
+
 /**
  * 
- * @param {Object<number, boolean|null>} cardsStateList 
+ * @param {Object<number, boolean|null>} cardsStateList
+ * @param {number} openedCardId
+ * @param {object} allCards
  */
-
-function drawTabList(cardsStateList, openedCardId, allCards) {
-
+function drawTabList(groupList, selectedGroup) {
   document.getElementById('group-bar').innerHTML = '';
 
-  // draw group tabs
-  const uniqueGroups = Object.values(cardsStateList)
-    .map(item => item.group)
-    .filter((value, index, self) => self.indexOf(value) === index);
-
-  for (const groupNumber of uniqueGroups) {
+  for (let groupNumber of groupList) {
     const groupLinkElement = document.createElement('div');
     groupLinkElement.textContent = groupNumber;
-    groupLinkElement.classList.add('group-link', 'tab');
+    groupLinkElement.classList.add('group-link', 'tab', 'active');
     groupLinkElement.setAttribute('data-tabs', `group-${groupNumber}`);
     document.getElementById('group-bar').appendChild(groupLinkElement);
-    if (groupNumber !== parseInt(allCards[openedCardId].group)) {
+    if (groupNumber !== selectedGroup) {
+      const groupTabListener = function () {
+        drawCardList(getGroupCardStateList(groupNumber, allCards, answeredCards = getAnsweredCards()))
+        drawTabList(getAllGroupList(allCards), groupNumber)
+      }
       groupLinkElement.classList.remove('active')
-      groupLinkElement // listener
+      groupLinkElement.addEventListener('click', groupTabListener); // add listener
+      // draw card list
+      // change classes of other tabs or draw new tablist
     }
   }
 }
 
 
-function drawCardList(cardsStateList, openedCardId, allCards) {
+// 203 : {isCorrect: false, group: 2, numberPerGroup: 72}
+function drawCardList(cardsStateList, openedCardId) {
   document.getElementById('card-list-container').innerHTML = '';
-
+  for (let cardId in cardsStateList) {
+    cardId = parseInt(cardId)
+    const cardLinkElement = document.createElement('div');
+    cardLinkElement.textContent = cardsStateList[cardId]['numberPerGroup'];
+    cardLinkElement.classList.add('card-link', `card-${cardId}`);
+    cardLinkElement.addEventListener('click', function () {
+      drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
+    });
+    if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.classList.add('correct') }
+    else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.classList.add('wrong') }
+    console.log(`cardId: ${typeof (cardId)} openedCardId: ${typeof (openedCardId)}`)
+    if (openedCardId === cardId) {
+      console.log(`currently selected card: ${cardId}`)
+      cardLinkElement.classList.add('current')
+      cardLinkElement.classList.remove('correct', 'wrong')
+    }
+    document.getElementById('card-list-container').appendChild(cardLinkElement);
+  }
 }
-
-
-function nextCard() { }
 
 
 function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
@@ -124,5 +139,14 @@ function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCar
 }
 
 
+function drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(), groupList = getAllGroupList()) {
+  // if cardId null, draw emptystate "all question being answered"
+  drawCard(cardContent = getContentForCard(cardId, allCards, answeredCards))
+  const selectedGroup = getCardGroup(cardId, allCards)
+  drawTabList(groupList, selectedGroup)
+  const cardsStateList = getGroupCardStateList(selectedGroup, allCards, answeredCards)
+  drawCardList(cardsStateList, openedCardId = cardId)
+  saveState(cardId, 'currentCardAll')
+}
 
 

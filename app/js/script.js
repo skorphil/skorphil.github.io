@@ -15,7 +15,6 @@ function getAnsweredCards() {
  * @param {(Object.<number, [boolean, number]>|null)} answeredCardsList
  * @returns {Object}
  */
-
 function getContentForCard(cardId, allCards, answeredCardsList) {
   console.log(allCards)
   console.log(cardId)
@@ -37,7 +36,6 @@ function getContentForCard(cardId, allCards, answeredCardsList) {
  * @param {(Object.<number, [boolean, number]>|null) answeredCards} answeredCards 
  * @returns 
  */
-
 function getNextUnansweredId(allCards, answeredCards) {
   if (answeredCards) {
     remainingCards = Object.keys(
@@ -58,9 +56,8 @@ function getNextUnansweredId(allCards, answeredCards) {
 
 
 function logAnswer(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
-  console.log(`answer - ${checkAnswer(cardId, optionId, allCards)}, chosenOption - ${optionId}`)
   answeredCards[cardId] = [optionId, checkAnswer(cardId, optionId, allCards)]
-  localStorage.setItem('answeredCardsAll', JSON.stringify(answeredCards));
+  saveState(JSON.stringify(answeredCards), 'answeredCardsAll');
 }
 
 
@@ -72,29 +69,58 @@ function checkAnswer(cardId, optionId, allCards) {
 function getNextErrorId() { }
 
 
-function getAllCardStateList(allCards, answeredCards = getAnsweredCards()) {
-
+function getGroupCardStateList(group, allCards, answeredCards = getAnsweredCards()) {
+  const cardsInGroup = Object.keys(allCards)
+    .filter(key => allCards[key].group === group)
+    .reduce((result, key) => {
+      result[key] = allCards[key];
+      return result;
+    }, {});
   const cardsStateList = {}
-  for (let index in allCards) {
+  for (let index in cardsInGroup) {
     if (answeredCards[index]) {
       cardsStateList[index] = { isCorrect: answeredCards[index][1] }
     } else { cardsStateList[index] = { isCorrect: null } }
-    cardsStateList[index]['group'] = allCards[index]['group']
-    cardsStateList[index]['numberPerGroup'] = allCards[index]['numberPerGroup']
+    cardsStateList[index]['group'] = cardsInGroup[index]['group']
+    cardsStateList[index]['numberPerGroup'] = cardsInGroup[index]['numberPerGroup']
   }
   return cardsStateList
-
 }
 
 
+// TODO return list of groups
+function getAllGroupList(allCards) {
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+}
 
-fetch(cardsFile)
-  .then(response => response.json())
-  .then(jsonData => {
-    // console.log(jsonData)
-    allCards = jsonData;
-    drawCard(cardContent = getContentForCard(getNextUnansweredId(allCards, getAnsweredCards()), allCards, getAnsweredCards()))
-  })
-  .catch(error => {
-    console.error('Error fetching quiz data:', error);
-  });
+
+// TODO return group of card
+function getCardGroup(cardId, allCards) {
+  return allCards[cardId]['group']
+}
+
+
+function saveState(data, localStorageVar) {
+  localStorage.setItem(localStorageVar, data);
+}
+
+
+function startApp() {
+  // if page index.html
+  cardId = localStorage.getItem('currentCardAll')
+  if (cardId == null) {
+    cardId = getNextUnansweredId
+  }
+  fetch(cardsFile)
+    .then(response => response.json())
+    .then(jsonData => {
+      // console.log(jsonData)
+      allCards = jsonData;
+      drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(), groupList = getAllGroupList())
+    })
+    .catch(error => {
+      console.error('Error fetching quiz data:', error);
+    });
+}
+
+startApp()

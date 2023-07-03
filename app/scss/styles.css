@@ -55,6 +55,10 @@ main.container {
   border-radius: 12px;
 }
 
+#image-container > img {
+  border-radius: 8px;
+}
+
 .singleOption.error {
   background-color: red;
 }
@@ -104,11 +108,11 @@ button.disabled {
   background-color: azure;
 }
 
-.card-link.answered-correct {
+.card-link.correct {
   background-color: green;
 }
 
-.card-link.answered-wrong {
+.card-link.wrong {
   background-color: transparent;
   border: 2px solid red;
   border-radius: 80px;

@@ -13,3 +13,7 @@
     ],
     "question": "Который из знаков означает \"Объезд  препятствия слева\"?  "
 }
+
+
+getGroupCardStateList return
+203 : {isCorrect: false, group: 2, numberPerGroup: 72}
