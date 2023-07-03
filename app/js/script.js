@@ -50,7 +50,7 @@ function getNextUnansweredId(allCards, answeredCards) {
     remainingCards = Object.keys(allCards)
     const randomInx = Math.floor(Math.random() * remainingCards.length);
     const NextUnansweredId = parseInt(remainingCards[randomInx]);
-    return NextUnansweredId
+    return parseInt(NextUnansweredId)
   }
 }
 
@@ -107,9 +107,9 @@ function saveState(data, localStorageVar) {
 
 function startApp() {
   // if page index.html
-  cardId = localStorage.getItem('currentCardAll')
+  cardId = parseInt(localStorage.getItem('currentCardAll'));
   if (cardId == null) {
-    cardId = getNextUnansweredId
+    cardId = getNextUnansweredId(allCards, getAnsweredCards());
   }
   fetch(cardsFile)
     .then(response => response.json())

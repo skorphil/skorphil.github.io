@@ -86,7 +86,7 @@ function nextButtonListener() {
  * @param {number} openedCardId
  * @param {object} allCards
  */
-function drawTabList(groupList, selectedGroup) {
+function drawTabList(groupList, selectedGroup, openedCardId) {
   document.getElementById('group-bar').innerHTML = '';
 
   for (let groupNumber of groupList) {
@@ -97,8 +97,8 @@ function drawTabList(groupList, selectedGroup) {
     document.getElementById('group-bar').appendChild(groupLinkElement);
     if (groupNumber !== selectedGroup) {
       const groupTabListener = function () {
-        drawCardList(getGroupCardStateList(groupNumber, allCards, answeredCards = getAnsweredCards()))
-        drawTabList(getAllGroupList(allCards), groupNumber)
+        drawCardList(getGroupCardStateList(groupNumber, allCards, answeredCards = getAnsweredCards()), openedCardId)
+        drawTabList(getAllGroupList(allCards), groupNumber, openedCardId)
       }
       groupLinkElement.classList.remove('active')
       groupLinkElement.addEventListener('click', groupTabListener); // add listener
@@ -143,7 +143,7 @@ function drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(), group
   // if cardId null, draw emptystate "all question being answered"
   drawCard(cardContent = getContentForCard(cardId, allCards, answeredCards))
   const selectedGroup = getCardGroup(cardId, allCards)
-  drawTabList(groupList, selectedGroup)
+  drawTabList(groupList, selectedGroup, cardId)
   const cardsStateList = getGroupCardStateList(selectedGroup, allCards, answeredCards)
   drawCardList(cardsStateList, openedCardId = cardId)
   saveState(cardId, 'currentCardAll')
