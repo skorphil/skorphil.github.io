@@ -5,25 +5,41 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Road Rules Armenia</title>
-  <!-- <link rel="stylesheet" href="styles.css"> -->
+  <title>All questions - Road Rules Armenia</title>
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <link rel="stylesheet" href="app/scss/styles.css">
 </head>
 
 <body>
   <main class="container">
-    <div class="question-card">
-      <p>Альфа версия - в некоторых вопросах могут быть перепутаны иллюстрации</p>
-      <div id="quizContainer"></div>
-      <h2>Все вопросы</h2>
-      <div id="group-bar" class="tab-bar"></div>
-      <div id="card-list-container">
+    <nav id="nav-bar" class="tab-bar">
+      <ul>
+        <li>All questions</li>
+        <li><a href="mistakes.html">Mistakes</a></li>
+      </ul>
+    </nav>
+
+    <div id="card-container">
+      <div id="image-container"></div>
+      <div class="question-card">
+        <div class="question-wrapper">
+          <div id="question-id"></div>
+          <div id="question-text"></div>
+        </div>
+        <div id="options-container"></div>
+        <div id="next-button-container">
+          <button id="next-unanswered-button" class="disabled">Следующий</button>
+        </div>
       </div>
     </div>
+
+    <h2>Все вопросы</h2>
+    <div id="group-bar" class="tab-bar"></div>
+    <div id="card-list-container">
+    </div>
   </main>
+  <script src="app/js/all-cards-display.js"></script>
   <script src="app/js/script.js"></script>
-  <input type="file" onchange="handleFileUpload(event)">
 
 </body>
 

@@ -1,0 +1,80 @@
+{
+    "id": 12,
+    "answer": 3,
+    "group": 1,
+    "img": "img/1.png",
+    "numberPerGroup": 1,
+    "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+    ],
+    "question": "Который из знаков означает \"Объезд  препятствия слева\"?  "
+}
+
+
+getGroupCardStateList return
+203 : {isCorrect: false, group: 2, numberPerGroup: 72}
+
+
+upload / download progress
+function downloadVariableAsFile(variable, filename) {
+  // Convert the variable to a JSON string
+  var jsonData = variable;
+
+  // Create a new Blob object with the JSON data
+  var blob = new Blob([jsonData], { type: 'application/json' });
+
+  // Create a new button element
+  var button = document.createElement('button');
+
+  // Set the button's attributes
+  button.innerHTML = 'Download progress';
+  button.addEventListener('click', function () {
+    // Create a temporary URL for the Blob object
+    var url = URL.createObjectURL(blob);
+
+    // Create a new anchor element
+    var anchor = document.createElement('a');
+
+    // Set the anchor's attributes
+    anchor.href = url;
+    anchor.download = filename;
+
+    // Append the anchor to the body
+    document.body.appendChild(anchor);
+
+    // Click the anchor to trigger the download
+    anchor.click();
+
+    // Remove the anchor from the body
+    document.body.removeChild(anchor);
+
+    // Revoke the temporary URL to free up memory
+    URL.revokeObjectURL(url);
+  });
+
+  // Append the button to the body
+  document.body.appendChild(button);
+}
+
+
+var myVariableLocal = localStorage.getItem('answeredCardsAll');
+downloadVariableAsFile(myVariableLocal, 'myVariable.json');
+
+function handleFileUpload(event) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    var jsonContent = e.target.result;
+    var jsonData = JSON.parse(jsonContent);
+    console.log(jsonData);
+    // Use jsonData as needed
+    localStorage.setItem('answeredCardsAll', jsonContent);
+  };
+
+  reader.readAsText(file);
+}
