@@ -159,7 +159,7 @@ function getAllGroupList(allCards) {
 function getErrorGroupList(allCards, answeredCards = getAnsweredCards()) {
   if (answeredCards) {
     const unansweredCards = Object.keys(answeredCards)
-      .filter(key => answeredCards[key][2] !== true)
+      .filter(key => answeredCards[key][2] !== true && answeredCards[key][1] === false)
     const cards = Object.fromEntries(
       Object.entries(allCards).filter(([key]) => unansweredCards.includes(key))
     );
