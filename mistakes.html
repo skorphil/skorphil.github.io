@@ -10,34 +10,36 @@
   <link rel="stylesheet" href="app/scss/styles.css">
 </head>
 
-<body>
+<body class="error-cards">
   <main class="container">
-    <nav id="nav-bar" class="tab-bar">
-      <ul>
-        <li><a href="index.html">All questions</a></li>
-        <li>Mistakes</li>
+    <nav id="nav-bar">
+      <ul class="tab-bar">
+        <li class="tab"><a href="index.html">All questions</a></li>
+        <li class="active tab">Mistakes</li>
       </ul>
     </nav>
-    <div id="image-container"></div>
-    <div class="question-card">
-      <div class="question-container">
-        <div id="question-id"></div>
-        <div id="question"></div>
-      </div>
-      <div id="quizContainer"></div>
-      <div id="next-button-container">
-        <button id="nextButton" class="disabled">Следующий</button>
-        <!-- <input type="checkbox" id="myCheckbox" name="myCheckbox" value="true">
-        <label for="myCheckbox">Случайный порядок вопросов</label> -->
+
+    <div id="card-container">
+      <div id="image-container"></div>
+      <div class="question-card">
+        <div class="question-wrapper">
+          <div id="question-id"></div>
+          <div id="question-text"></div>
+        </div>
+        <div id="options-container"></div>
+        <div id="next-button-container">
+          <button id="next-error-button" class="disabled">Следующий</button>
+        </div>
       </div>
     </div>
+
     <h2>Все ошибки</h2>
-    <div id="group-bar" class="tab-bar"></div>
+    <ul id="group-bar" class="tab-bar"></ul>
     <div id="card-list-container">
     </div>
   </main>
+  <script src="app/js/error-cards-display.js"></script>
   <script src="app/js/script.js"></script>
-  <input type="file" onchange="handleFileUpload(event)">
 
 </body>
 
