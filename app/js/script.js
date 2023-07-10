@@ -87,12 +87,19 @@ function logAnswerError(cardId, optionId, answeredCards = getAnsweredCards(), al
 
 function logAnswer(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
   if (answeredCards) {
+    console.log('logAnswer answeredcards exist')
     answeredCards[cardId] = [optionId, checkAnswer(cardId, optionId, allCards)]
   } else {
     answeredCards = {}
+    console.log(`logAnswer answeredcards NOT exists we create it 1st time:`)
+    console.log(answeredCards)
     answeredCards[cardId] = [optionId, checkAnswer(cardId, optionId, allCards)]
+    console.log(answeredCards)
   }
   saveState(JSON.stringify(answeredCards), 'answeredCardsAll');
+  return answeredCards
+  // console.log('Get saved from LocalStorage')
+  // console.log(JSON.parse(localStorage.getItem('answeredCardsAll')))
 }
 
 
@@ -186,13 +193,13 @@ function startAppAll() {
   fetch(cardsFile)
     .then(response => response.json())
     .then(jsonData => {
-      console.log(jsonData)
+      allCards = jsonData;
       cardId = parseInt(localStorage.getItem('currentCardAll'));
       if (!cardId) {
         cardId = getNextUnansweredId(allCards, getAnsweredCards());
       }
 
-      allCards = jsonData;
+
       drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(),
         groupList = getAllGroupList())
     })
@@ -208,13 +215,14 @@ function startAppError() {
     .then(response => response.json())
     .then(jsonData => {
       // console.log(jsonData)
+      allCards = jsonData;
       cardId = parseInt(localStorage.getItem('currentCardError'));
       if (!cardId) {
         console.log('getting random unansweredId')
         cardId = getNextErrorId(getAnsweredCards());
         console.log(cardId) //add emptystate
       }
-      allCards = jsonData;
+
       drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(),
         groupList = getErrorGroupList(allCards, answeredCards = getAnsweredCards()))
     })
