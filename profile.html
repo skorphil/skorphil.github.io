@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="downloadButton">Download Local Storage Data as JSON</button>
+  <button id="downloadButton2">Download currentCardAll Data as JSON</button>
+
+
+  <script>
+    document.getElementById("downloadButton").addEventListener("click", downloadLocalStorageData);
+
+    function downloadLocalStorageData() {
+      // Check if the variable exists in local storage
+      if (localStorage.getItem("answeredCardsAll") === null) {
+        alert("The variable does not exist in local storage.");
+        return;
+      }
+
+      // Retrieve the variable from local storage
+      const yourVariable = JSON.parse(localStorage.getItem("answeredCardsAll"));
+
+      // Convert the variable to a JSON string
+      const jsonData = JSON.stringify(yourVariable, null, 2); // The 2 is for pretty formatting, you can change it to 0 for compact format
+
+      // Create a Blob with the JSON data
+      const blob = new Blob([jsonData], { type: "application/json" });
+
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link and set its properties
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "data.json"; // Set the filename for the downloaded file
+
+      // Append the link to the document and click it programmatically to trigger the download
+      document.body.appendChild(link);
+      link.click();
+
+      // Remove the temporary link from the document
+      document.body.removeChild(link);
+
+      // Release the URL object
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+  <script>
+    document.getElementById("downloadButton2").addEventListener("click", downloadLocalStorageData2);
+
+    function downloadLocalStorageData2() {
+      // Check if the variable exists in local storage
+      if (localStorage.getItem("currentCardAll") === null) {
+        alert("The variable does not exist in local storage.");
+        return;
+      }
+
+      // Retrieve the variable from local storage
+      const yourVariable = JSON.parse(localStorage.getItem("currentCardAll"));
+
+      // Convert the variable to a JSON string
+      const jsonData = JSON.stringify(yourVariable, null, 2); // The 2 is for pretty formatting, you can change it to 0 for compact format
+
+      // Create a Blob with the JSON data
+      const blob = new Blob([jsonData], { type: "application/json" });
+
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link and set its properties
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "data.json"; // Set the filename for the downloaded file
+
+      // Append the link to the document and click it programmatically to trigger the download
+      document.body.appendChild(link);
+      link.click();
+
+      // Remove the temporary link from the document
+      document.body.removeChild(link);
+
+      // Release the URL object
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+</body>
+
+</html>
