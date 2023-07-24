@@ -49,6 +49,8 @@ function getNextUnansweredId(allCards, answeredCards) {
         Object.entries(allCards).filter(([key]) => !Object.keys(answeredCards).includes(key))
       )
     )
+    console.log(`rem cards - ${remainingCards}`)
+    console.log(`type of entry in rem cards - ${typeof remainingCards[1]}`)
     const randomInx = Math.floor(Math.random() * remainingCards.length);
     const NextUnansweredId = parseInt(remainingCards[randomInx]);
     return NextUnansweredId

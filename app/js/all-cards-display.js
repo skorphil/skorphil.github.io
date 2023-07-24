@@ -103,9 +103,7 @@ function drawTabList(groupList, selectedGroup, openedCardId) {
         drawTabList(getAllGroupList(allCards), groupNumber, openedCardId)
       }
       groupLinkElement.classList.remove('active')
-      groupLinkElement.addEventListener('click', groupTabListener); // add listener
-      // draw card list
-      // change classes of other tabs or draw new tablist
+      groupLinkElement.addEventListener('click', groupTabListener);
     }
   }
 }
