@@ -137,8 +137,8 @@ function drawCardList(cardsStateList, openedCardId) {
 
 
 function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
-  logAnswerError(cardId, optionId, answeredCards, allCards)
-  drawCard(getContentForCard(cardId, allCards, answeredCards, true))
+  answer = logAnswer(cardId, optionId, answeredCards, allCards)
+  drawCard(getContentForCard(cardId, allCards, answer, true))
 }
 
 
