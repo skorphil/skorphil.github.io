@@ -8,6 +8,7 @@ function getAnsweredCards() {
   } else return null
 }
 
+
 /**
  * Get content from cards DB and adds answered option if question being answered before
  * @param {number} cardId 
@@ -24,6 +25,7 @@ function getContentForCard(cardId, allCards, answeredCardsList, drawButton) {
   if (drawButton === true) {
     cardData['drawButton'] = true
   }
+
   if (answeredCardsList) {
     if (answeredCardsList.hasOwnProperty(cardId) === true) {
       cardData['chosenOption'] = answeredCardsList[cardId][0]
@@ -168,7 +170,7 @@ function getAllGroupList(allCards) {
 function getErrorGroupList(allCards, answeredCards = getAnsweredCards()) {
   if (answeredCards) {
     const unansweredCards = Object.keys(answeredCards)
-      .filter(key => answeredCards[key][2] !== true)
+      .filter(key => answeredCards[key][2] !== true && answeredCards[key][1] !== true)
     const cards = Object.fromEntries(
       Object.entries(allCards).filter(([key]) => unansweredCards.includes(key))
     );

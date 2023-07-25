@@ -1,6 +1,7 @@
 
 localStorage
 ============
+============
 
 @startjson
 {
@@ -14,6 +15,48 @@ localStorage
     "isRandomAll (is next question being randomly chosen in 'all' mode)": true  
 }
 @endjson
+
+
+localStorage old progress structure
+===================================
+
+@startjson
+{
+    "answeredCardsAll (list of answered questions)": {
+        "1 (number of question)": ["0 (id of answered option)", "false (is correct?)", "true (is answered later?)"],
+        "3": [1, true, "NaN"],
+        "120": [3, false, "NaN"]    
+    }  
+}
+@endjson
+
+
+localStorage new progress structure (24 jul)
+===================================
+
+@startjson
+{
+  "answeredCards (list of answered questions)": {
+        "1 (number of question)": {
+            "2020-12-15": {
+                "answeredId" :"0",
+                "isCorrect": "false"
+            },
+            "2020-12-15": {
+                "answeredId" :"1",
+                "isCorrect": "true"
+            }
+        },
+        "2": {
+            "2020-12-15": {
+                "answeredId" :"1",
+                "isCorrect": "false"
+            }
+        }
+    }  
+}
+@endjson
+
 
 @startjson
 {
