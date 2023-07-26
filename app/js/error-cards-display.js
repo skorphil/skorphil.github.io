@@ -12,20 +12,18 @@
  * @param {boolean} cardContent.drawCard - true if card was answered in error mode
  * @return {void} Nothing
  */
-function drawCard(cardContent) {
-
-  const nextUnansweredButton = document.getElementById('next-error-button')
-  nextUnansweredButton.classList.add('disabled')
+function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
 
   // Create meta-element
   const metaElement = document.getElementById('question-id')
   metaElement.innerHTML = '';
   metaElement.textContent =
-    `Г${cardContent.group}, В${cardContent.numberPerGroup}`;
+    `Г${group}, В${numberPerGroup}`;
+
 
   // Create img element
   document.getElementById('image-container').innerHTML = '';
-  if (cardContent.img) {
+  if (img) {
     const imageElement = document.createElement('img');
     imageElement.src = 'app/content/' + cardContent.img;
     document.getElementById('image-container').appendChild(imageElement);
@@ -34,45 +32,115 @@ function drawCard(cardContent) {
   // Create question element
   const questionElement = document.getElementById('question-text');
   questionElement.innerHTML = '';
-  questionElement.textContent = cardContent.question;
+  questionElement.textContent = question;
 
   // Create options
+  // const {
+  //   isAnswered,
+  //   isfirstAnswerCorrect,
+  //   correctAnswer,
+  //   lastSelectedOption
+  // } = getCardAnswerHistory(cardId, allCards)
+
+
+
+  drawOptions({
+    'options': options,
+    'cardId': cardId,
+  })
+
+
+
+
+
+  // const optionsContainerElement = document.getElementById('options-container');
+  // optionsContainerElement.innerHTML = '';
+
+  // cardContent.options.forEach((option, optionIndex) => {
+  //   const optionElement = document.createElement('div');
+  //   optionElement.textContent = option;
+  //   optionElement.classList.add('singleOption', 'disable-hover');
+  //   optionElement.id = `option-${optionIndex}`
+  //   optionsContainerElement.appendChild(optionElement);
+
+  //   // If card was answered, add listeners
+  //   if (cardContent.drawButton !== true) {
+  //     optionElement.classList.remove('disable-hover');
+
+  //     // TODO add content to access from js (optionIndex)
+  //     const optionListener = function () {
+  //       console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
+  //       answerCard(cardContent.id, optionIndex, answeredCards = getAnsweredCards(), allCards)
+  //     }
+  //     optionElement.addEventListener('click', optionListener);
+  //   }
+  // })
+
+  // // If card was answered, display answers and enable next-unanswered-button
+  // if (cardContent.drawButton === true) {
+  //   const correctOption = cardContent.answer - 1;
+  //   const chosenOption = cardContent.chosenOption;
+  //   if (cardContent.isAnswered === false) {
+  //     document.getElementById(`option-${correctOption}`).classList.add('correct');
+  //     document.getElementById(`option-${chosenOption}`).classList.add('error');
+  //   } else { document.getElementById(`option-${correctOption}`).classList.add('correct'); }
+
+  //   nextUnansweredButton.addEventListener('click', nextButtonListener);
+  //   nextUnansweredButton.classList.remove('disabled')
+  // }
+};
+
+
+function drawOptions({ cardId, options, correctId = null, wrongId = null, isButtonDisabled = true }) {
+
+  const nextUnansweredButton = document.getElementById('next-error-button');
   const optionsContainerElement = document.getElementById('options-container');
+
+  if (isButtonDisabled) {
+    nextUnansweredButton.classList.add('disabled')
+  } else if (!isButtonDisabled) {
+    nextUnansweredButton.addEventListener('click', nextButtonListener);
+    nextUnansweredButton.classList.remove('disabled');
+  };
+
   optionsContainerElement.innerHTML = '';
 
-  cardContent.options.forEach((option, optionIndex) => {
+  options.forEach((option, optionIndex) => {
     const optionElement = document.createElement('div');
     optionElement.textContent = option;
     optionElement.classList.add('singleOption', 'disable-hover');
-    optionElement.id = `option-${optionIndex}`
+    optionElement.id = `option-${optionIndex}`;
     optionsContainerElement.appendChild(optionElement);
-
-    // If card was answered, add listeners
-    if (cardContent.drawButton !== true) {
+    if (correctId === null) {
       optionElement.classList.remove('disable-hover');
-
-      // TODO add content to access from js (optionIndex)
       const optionListener = function () {
-        console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
-        answerCard(cardContent.id, optionIndex, answeredCards = getAnsweredCards(), allCards)
+        // console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
+
+        // TODO remove reload from answerCard
+        const { correctId, wrongId } = answerCard(cardId, optionIndex, answeredCards = getAnsweredCards(), allCards)
+        drawOptions({
+          'options': options,
+          isButtonDisabled: false,
+          'wrongId': wrongId,
+          'correctId': correctId
+        })
       }
       optionElement.addEventListener('click', optionListener);
+
     }
-  })
+  });
 
-  // If card was answered, display answers and enable next-unanswered-button
-  if (cardContent.drawButton === true) {
-    const correctOption = cardContent.answer - 1;
-    const chosenOption = cardContent.chosenOption;
-    if (cardContent.isAnswered === false) {
-      document.getElementById(`option-${correctOption}`).classList.add('correct');
-      document.getElementById(`option-${chosenOption}`).classList.add('error');
-    } else { document.getElementById(`option-${correctOption}`).classList.add('correct'); }
+  if (correctId !== null) {
+    const correctOptionElement = document.getElementById(`option-${correctId}`)
 
-    nextUnansweredButton.addEventListener('click', nextButtonListener);
-    nextUnansweredButton.classList.remove('disabled')
+    correctOptionElement.classList.add('correct');
+  };
+  if (wrongId !== null) {
+    const wrongOptionElement = document.getElementById(`option-${wrongId}`)
+
+    wrongOptionElement.classList.add('error');
   }
-};
+}
 
 
 function nextButtonListener() {
@@ -137,8 +205,7 @@ function drawCardList(cardsStateList, openedCardId) {
 
 
 function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
-  logAnswerError(cardId, optionId, answeredCards, allCards)
-  drawCard(getContentForCard(cardId, allCards, answeredCards, true))
+  return logAnswer(cardId, optionId, answeredCards, allCards)
 }
 
 
