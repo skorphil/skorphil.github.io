@@ -61,23 +61,13 @@ function upgradeLocalStorageFormat(legacyProgressObj) {
  */
 function getContentForCard(cardId, allCards, answeredCardsList, drawButton) {
   const cardData = {
-    group: allCards[cardId].group,
-    numberPerGroup: allCards[cardId].numberPerGroup,
-    img: allCards[cardId].img,
-    question: allCards[cardId].question
+    'group': allCards[cardId].group,
+    'numberPerGroup': allCards[cardId].numberPerGroup,
+    'img': allCards[cardId].img,
+    'question': allCards[cardId].question,
+    'options': allCards[cardId].options,
+    'cardId': cardId
   }
-
-
-  // if (drawButton === true) {
-  //   cardData['drawButton'] = true
-  // }
-
-  // if (answeredCardsList) {
-  //   if (answeredCardsList.hasOwnProperty(cardId) === true) {
-  //     cardData['chosenOption'] = answeredCardsList[cardId][0]
-  //     cardData['isAnswered'] = answeredCardsList[cardId][2]
-  //   }
-  // }
 
   return cardData
 }
@@ -110,7 +100,7 @@ function getNextUnansweredId(allCards, answeredCards) {
   }
 }
 
-// updated
+
 function getNextErrorId(answeredCards = getAnsweredCards()) {
   if (answeredCards) {
     let remainingCards = []
@@ -131,28 +121,12 @@ function getNextErrorId(answeredCards = getAnsweredCards()) {
     return nextUnansweredId
 
   } else {
-    // console.log(`getNextErrorId no answeredCards where passed - ${answeredCards}`)
 
     return null
   }
 }
 
 
-// function logAnswerError(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
-//   const date = Date.now()
-
-//   answeredCards[cardId][date] = {
-//     "selectedOptionId": [optionId],
-//     "isCorrect": [checkAnswer(cardId, optionId, allCards)]
-//   };
-
-//   console.log(answeredCards[cardId]);
-//   console.log(checkAnswer(cardId, optionId, allCards));
-//   saveState(JSON.stringify(answeredCards), 'answeredCardsAll');
-// }
-
-
-// updated untested
 function logAnswer(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
   const date = Date.now();
 
@@ -184,7 +158,24 @@ function checkAnswer(cardId, optionId, allCards) {
   }
 }
 
-//updated
+
+function getCardAnswerHistory(cardId, allCards, answeredCards = getAnsweredCards()) {
+
+  if (answeredCards[cardId]) {
+    answersOldToNew = Object.keys(answeredCards[cardId]).sort((a, b) => a - b)
+
+    return {
+      isAnswered: true,
+      'isfirstAnswerCorrect': answeredCards[cardId][answersOldToNew[0]].isCorrect,
+      'firstselectedOption': answeredCards[cardId][answersOldToNew[0]].selectedOptionId,
+      'correctAnswer': allCards[cardId]['answer'],
+      'answers': answeredCards[cardId],
+      'lastSelectedOption': answeredCards[cardId][answersOldToNew[answersOldToNew.length - 1]].selectedOptionId,
+    }
+  } else return { isAnswered: false }
+}
+
+
 function getGroupCardStateList(group, allCards, answeredCards = getAnsweredCards()) {
   const cardsInGroup = Object.keys(allCards)
     .filter(key => allCards[key].group === group)
@@ -195,7 +186,7 @@ function getGroupCardStateList(group, allCards, answeredCards = getAnsweredCards
 
   const cardsStateList = {}
   for (let index in cardsInGroup) {
-    if (answeredCards !== undefined) {
+    if (answeredCards) {
       if (answeredCards[index]) {
         datesWhenAnswered = Object.keys(answeredCards[index]).sort((a, b) => a - b)
 
@@ -211,7 +202,7 @@ function getGroupCardStateList(group, allCards, answeredCards = getAnsweredCards
   return cardsStateList
 }
 
-// updated
+
 function getGroupErrorCards(group, allCards, answeredCards = getAnsweredCards()) {
   let unansweredCards = [];
 
@@ -255,16 +246,30 @@ function getAllGroupList(allCards) {
 
 
 function getErrorGroupList(allCards, answeredCards = getAnsweredCards()) {
+
+  let unansweredCards = [];
+
   if (answeredCards) {
-    const unansweredCards = Object.keys(answeredCards)
-      .filter(key => answeredCards[key][2] !== true && answeredCards[key][1] !== true)
+    for (let key in answeredCards) {
+      datesWhenAnswered = Object.keys(answeredCards[key]).sort((a, b) => b - a);
+
+      if (!(answeredCards[key][datesWhenAnswered[0]].isCorrect)) { // chek if the latest answer is wrong
+        unansweredCards.push(key)
+      }
+    }
+
     const cards = Object.fromEntries(
       Object.entries(allCards).filter(([key]) => unansweredCards.includes(key))
     );
-    const uniqueGroups = [...new Set(Object.values(cards).map(item => item.group))];
 
-    return uniqueGroups
-  } else { }
+    if (unansweredCards.length !== 0) {
+      const uniqueGroups = [...new Set(Object.values(cards).map(item => item.group))];
+
+      return uniqueGroups
+
+    } else return {}
+
+  } else return {}
 }
 
 
