@@ -57,8 +57,6 @@ function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
       'cardId': cardId
     })
   }
-
-
 };
 
 
@@ -74,8 +72,6 @@ function drawOptions({ cardId, options, correctId = null, wrongId = null, isButt
     nextUnansweredButton.removeClass('disabled');
   };
 
-
-
   options.forEach((option, optionIndex) => {
     const optionElement = $('<div>')
       .text(option)
@@ -83,11 +79,7 @@ function drawOptions({ cardId, options, correctId = null, wrongId = null, isButt
       .attr('id', `option-${optionIndex}`);
 
     $(optionsContainerElement).append(optionElement);
-    // const optionElement = document.createElement('div');
-    // optionElement.textContent = option;
-    // optionElement.classList.add('singleOption', 'disable-hover');
-    // optionElement.id = `option-${optionIndex}`;
-    // optionsContainerElement.append(optionElement);
+
     if (correctId === null) {
       optionElement.removeClass('disable-hover');
       const optionListener = function () {
@@ -123,7 +115,6 @@ function nextButtonListener() {
 }
 
 
-
 /**
  * 
  * @param {Object<number, boolean|null>} cardsStateList
@@ -134,7 +125,7 @@ function drawTabList(groupList, selectedGroup, openedCardId) {
   $('#group-bar').empty();
 
   for (let groupNumber of groupList) {
-    const groupLinkElement = $('<div>')
+    const groupLinkElement = $('<li>')
       .text(groupNumber)
       .addClass('group-link tab active')
       .attr('data-tabs', `group-${groupNumber}`);
@@ -150,42 +141,38 @@ function drawTabList(groupList, selectedGroup, openedCardId) {
     }
   }
 }
+// jquery
 
-
-// 203 : {isCorrect: false, group: 2, numberPerGroup: 72}
 function drawCardList(cardsStateList, openedCardId) {
-  document.getElementById('card-list-container').innerHTML = '';
+  $('#card-list-container').empty();
   for (let cardId in cardsStateList) {
     cardId = parseInt(cardId)
-    const cardLinkElement = document.createElement('div');
-    cardLinkElement.textContent = cardsStateList[cardId]['numberPerGroup'];
-    cardLinkElement.classList.add('card-link', `card-${cardId}`);
-    cardLinkElement.addEventListener('click', function () {
-      drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
-    });
-    if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.classList.add('correct') }
-    else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.classList.add('wrong') }
+    const cardLinkElement = $('<div>')
+      .text(cardsStateList[cardId]['numberPerGroup'])
+      .addClass(`card-link card-${cardId}`)
+      .bind('click', function () {
+        drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
+      });
+    if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.addClass('correct') }
+    else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.addClass('wrong') }
     console.log(`cardId: ${typeof (cardId)} openedCardId: ${typeof (openedCardId)}`)
     if (openedCardId === cardId) {
       console.log(`currently selected card: ${cardId}`)
-      cardLinkElement.classList.add('current')
-      cardLinkElement.classList.remove('correct', 'wrong')
+      cardLinkElement.addClass('current')
+      cardLinkElement.removeClass('correct wrong')
     }
-    document.getElementById('card-list-container').appendChild(cardLinkElement);
+    $('#card-list-container').append(cardLinkElement);
   }
 }
 
 
 function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
-
   return logAnswer(cardId, optionId, answeredCards, allCards)
 }
 
 
 function drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(), groupList = getAllGroupList()) {
   // if cardId null, draw emptystate "all question being answered"
-
-
 
   drawCard(cardContent = getContentForCard(cardId, allCards, answeredCards))
   const selectedGroup = getCardGroup(cardId, allCards)
