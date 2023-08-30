@@ -15,40 +15,45 @@
 function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
 
   // Create meta-element
-  $('#question-id').html(`Г${group}, В${numberPerGroup}`);
+  const metaElement = document.getElementById('question-id')
+  metaElement.innerHTML = '';
+  metaElement.textContent =
+    `Г${group}, В${numberPerGroup}`;
+
 
   // Create img element
-  $('#image-container').empty();
+  document.getElementById('image-container').innerHTML = '';
   if (img) {
-    $('#image-container').html(
-      `<img src="app/content/${cardContent.img}" alt="Question illustration">`
-    );
+    const imageElement = document.createElement('img');
+    imageElement.src = 'app/content/' + cardContent.img;
+    document.getElementById('image-container').appendChild(imageElement);
   }
 
   // Create question element
-  $('#question-text').html(question)
+  const questionElement = document.getElementById('question-text');
+  questionElement.innerHTML = '';
+  questionElement.textContent = question;
+
 
   // create options
   const { isAnswered,
     isfirstAnswerCorrect,
     correctAnswer,
-    firstSelectedOption } = getCardAnswerHistory(cardId, allCards)
+    firstselectedOption } = getCardAnswerHistory(cardId, allCards)
 
   if (isAnswered) {
     if (isfirstAnswerCorrect) {
       drawOptions({
         'options': options,
         'cardId': cardId,
-        'correctId': correctAnswer - 1,
-        'isButtonDisabled': false,
+        'correctId': correctAnswer - 1
       })
     } else if (!isfirstAnswerCorrect) {
       drawOptions({
         'options': options,
         'cardId': cardId,
         'correctId': correctAnswer - 1,
-        'wrongId': firstSelectedOption,
-        'isButtonDisabled': false,
+        'wrongId': firstselectedOption
       })
     }
   } else if (!isAnswered) {
@@ -57,31 +62,33 @@ function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
       'cardId': cardId
     })
   }
+
+
 };
 
 
 function drawOptions({ cardId, options, correctId = null, wrongId = null, isButtonDisabled = true }) {
 
-  const nextUnansweredButton = $('#next-unanswered-button');
-  const optionsContainerElement = $('#options-container').empty();
+  const nextUnansweredButton = document.getElementById('next-unanswered-button');
+  const optionsContainerElement = document.getElementById('options-container');
 
   if (isButtonDisabled) {
-    nextUnansweredButton.addClass('disabled')
+    nextUnansweredButton.classList.add('disabled')
   } else if (!isButtonDisabled) {
-    nextUnansweredButton.bind('click', nextButtonListener);
-    nextUnansweredButton.removeClass('disabled');
+    nextUnansweredButton.addEventListener('click', nextButtonListener);
+    nextUnansweredButton.classList.remove('disabled');
   };
 
+  optionsContainerElement.innerHTML = '';
+
   options.forEach((option, optionIndex) => {
-    const optionElement = $('<div>')
-      .text(option)
-      .addClass('singleOption disable-hover')
-      .attr('id', `option-${optionIndex}`);
-
-    $(optionsContainerElement).append(optionElement);
-
+    const optionElement = document.createElement('div');
+    optionElement.textContent = option;
+    optionElement.classList.add('singleOption', 'disable-hover');
+    optionElement.id = `option-${optionIndex}`;
+    optionsContainerElement.appendChild(optionElement);
     if (correctId === null) {
-      optionElement.removeClass('disable-hover');
+      optionElement.classList.remove('disable-hover');
       const optionListener = function () {
         // console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
 
@@ -94,16 +101,20 @@ function drawOptions({ cardId, options, correctId = null, wrongId = null, isButt
           'correctId': correctId
         })
       }
-      optionElement.bind('click', optionListener);
+      optionElement.addEventListener('click', optionListener);
 
     }
   });
 
   if (correctId !== null) {
-    $(`#option-${correctId}`).addClass('correct');
+    const correctOptionElement = document.getElementById(`option-${correctId}`)
+
+    correctOptionElement.classList.add('correct');
   };
   if (wrongId !== null) {
-    $(`#option-${wrongId}`).addClass('error');
+    const wrongOptionElement = document.getElementById(`option-${wrongId}`)
+
+    wrongOptionElement.classList.add('error');
   }
 }
 
@@ -115,6 +126,7 @@ function nextButtonListener() {
 }
 
 
+
 /**
  * 
  * @param {Object<number, boolean|null>} cardsStateList
@@ -122,57 +134,60 @@ function nextButtonListener() {
  * @param {object} allCards
  */
 function drawTabList(groupList, selectedGroup, openedCardId) {
-  $('#group-bar').empty();
+  document.getElementById('group-bar').innerHTML = '';
 
   for (let groupNumber of groupList) {
-    const groupLinkElement = $('<li>')
-      .text(groupNumber)
-      .addClass('group-link tab active')
-      .attr('data-tabs', `group-${groupNumber}`);
-    $('#group-bar').append(groupLinkElement);
-
+    const groupLinkElement = document.createElement('div');
+    groupLinkElement.textContent = groupNumber;
+    groupLinkElement.classList.add('group-link', 'tab', 'active');
+    groupLinkElement.setAttribute('data-tabs', `group-${groupNumber}`);
+    document.getElementById('group-bar').appendChild(groupLinkElement);
     if (groupNumber !== selectedGroup) {
       const groupTabListener = function () {
         drawCardList(getGroupCardStateList(groupNumber, allCards, answeredCards = getAnsweredCards()), openedCardId)
         drawTabList(getAllGroupList(allCards), groupNumber, openedCardId)
       }
-      groupLinkElement.removeClass('active')
-      groupLinkElement.bind('click', groupTabListener);
+      groupLinkElement.classList.remove('active')
+      groupLinkElement.addEventListener('click', groupTabListener);
     }
   }
 }
-// jquery
 
+
+// 203 : {isCorrect: false, group: 2, numberPerGroup: 72}
 function drawCardList(cardsStateList, openedCardId) {
-  $('#card-list-container').empty();
+  document.getElementById('card-list-container').innerHTML = '';
   for (let cardId in cardsStateList) {
     cardId = parseInt(cardId)
-    const cardLinkElement = $('<div>')
-      .text(cardsStateList[cardId]['numberPerGroup'])
-      .addClass(`card-link card-${cardId}`)
-      .bind('click', function () {
-        drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
-      });
-    if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.addClass('correct') }
-    else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.addClass('wrong') }
+    const cardLinkElement = document.createElement('div');
+    cardLinkElement.textContent = cardsStateList[cardId]['numberPerGroup'];
+    cardLinkElement.classList.add('card-link', `card-${cardId}`);
+    cardLinkElement.addEventListener('click', function () {
+      drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
+    });
+    if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.classList.add('correct') }
+    else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.classList.add('wrong') }
     console.log(`cardId: ${typeof (cardId)} openedCardId: ${typeof (openedCardId)}`)
     if (openedCardId === cardId) {
       console.log(`currently selected card: ${cardId}`)
-      cardLinkElement.addClass('current')
-      cardLinkElement.removeClass('correct wrong')
+      cardLinkElement.classList.add('current')
+      cardLinkElement.classList.remove('correct', 'wrong')
     }
-    $('#card-list-container').append(cardLinkElement);
+    document.getElementById('card-list-container').appendChild(cardLinkElement);
   }
 }
 
 
 function answerCard(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
+
   return logAnswer(cardId, optionId, answeredCards, allCards)
 }
 
 
 function drawNewPage(cardId, allCards, answeredCards = getAnsweredCards(), groupList = getAllGroupList()) {
   // if cardId null, draw emptystate "all question being answered"
+
+
 
   drawCard(cardContent = getContentForCard(cardId, allCards, answeredCards))
   const selectedGroup = getCardGroup(cardId, allCards)

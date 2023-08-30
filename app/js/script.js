@@ -44,7 +44,7 @@ function upgradeLocalStorageFormat(legacyProgressObj) {
       }
     }
     upgradedObj[key][dateYesterday] = {
-      answeredId: legacyProgressObj[key][0],
+      selectedOptionId: legacyProgressObj[key][0],
       isCorrect: legacyProgressObj[key][1]
     }
   }
@@ -167,7 +167,7 @@ function getCardAnswerHistory(cardId, allCards, answeredCards = getAnsweredCards
     return {
       isAnswered: true,
       'isfirstAnswerCorrect': answeredCards[cardId][answersOldToNew[0]].isCorrect,
-      'firstselectedOption': answeredCards[cardId][answersOldToNew[0]].selectedOptionId,
+      'firstSelectedOption': answeredCards[cardId][answersOldToNew[0]].selectedOptionId,
       'correctAnswer': allCards[cardId]['answer'],
       'answers': answeredCards[cardId],
       'lastSelectedOption': answeredCards[cardId][answersOldToNew[answersOldToNew.length - 1]].selectedOptionId,
