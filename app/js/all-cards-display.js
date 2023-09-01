@@ -64,8 +64,6 @@ function optionListener(event) {
 }
 
 function drawOptions({ cardId, options }) {
-
-
   const optionsContainerElement = $('#options-container').empty().bind('click', optionListener);
 
   $('#next-unanswered-button')
