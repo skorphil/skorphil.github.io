@@ -73,6 +73,14 @@ function getContentForCard(cardId, allCards) {
 }
 
 
+function findLowestLargerNumber(arr, target) {
+  const minLargerNumber = arr.reduce((min, num) =>
+    (parseInt(num) > target && parseInt(num) < min) ? parseInt(num) : min, Infinity);
+
+  return minLargerNumber
+}
+
+
 /**
  * 
  * @param {Object.<number, {}>} allCards
@@ -80,7 +88,7 @@ function getContentForCard(cardId, allCards) {
  * @param {(Object.<number, [boolean, number]>|null) answeredCards} answeredCards 
  * @returns 
  */
-function getNextUnansweredId(allCards, answeredCards) {
+function getNextUnansweredId(allCards, answeredCards, isRandom = true) {
   if (answeredCards) {
     remainingCards = Object.keys(
       Object.fromEntries(
@@ -88,10 +96,16 @@ function getNextUnansweredId(allCards, answeredCards) {
       )
     )
     console.log(`rem cards - ${remainingCards}`)
-    console.log(`type of entry in rem cards - ${typeof remainingCards[1]}`)
-    const randomInx = Math.floor(Math.random() * remainingCards.length);
-    const NextUnansweredId = parseInt(remainingCards[randomInx]);
-    return NextUnansweredId
+    console.log(`second rem cards - ${remainingCards[1]}`)
+
+    if (isRandom) {
+      const randomInx = Math.floor(Math.random() * remainingCards.length);
+      const NextUnansweredId = parseInt(remainingCards[randomInx]);
+      return NextUnansweredId
+    } else if (!isRandom) {
+      return findLowestLargerNumber(remainingCards,
+        currentCard = parseInt(localStorage.getItem('currentCardAll')))
+    }
   } else { // Need testing with empty localStorage
     remainingCards = Object.keys(allCards)
     const randomInx = Math.floor(Math.random() * remainingCards.length);

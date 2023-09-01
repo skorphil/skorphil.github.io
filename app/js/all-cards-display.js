@@ -10,19 +10,18 @@
  * @param {number} [cardContent.chosenOption]
  * @return {void} Nothing
  */
-
-// group, numberpergroup, img, question
 function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
-
   // Create meta-element
   $('#question-id').html(`Г${group}, В${numberPerGroup}`);
+  // TODO add error count
 
   // Create img element
-  $('#image-container').empty();
   if (img) {
     $('#image-container').html(
-      `<img src="app/content/${cardContent.img}" alt="Question illustration">`
-    );
+      `<img src="app/content/${cardContent.img}" alt="Question illustration">`)
+  } else {
+    $('#image-container').html(
+      `Билет без иллюстрации`);
   }
 
   // Create question element
@@ -33,14 +32,14 @@ function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
     'options': options,
     'cardId': cardId
   })
-
 };
 
 function nextButtonListener() {
-  const nextCardId = getNextUnansweredId(allCards, getAnsweredCards())
+  const nextCardId = getNextUnansweredId(allCards, getAnsweredCards(), isRandom = $("#random-mode-checkbox").is(':checked'))
+
   if (nextCardId) {
     drawNewPage(nextCardId, allCards, answeredCards = getAnsweredCards())
-  } else throw console.error(`Wrong card ID: ${nextCardId}`);
+  } else alert(`Wrong card ID: ${nextCardId}`);
 }
 
 
@@ -52,7 +51,6 @@ function optionListener(event) {
     $('#options-container > .singleOption').addClass('disable-hover');
     $('#next-unanswered-button').removeClass('disabled');
 
-
     let { wrongId, correctId } = logAnswer(cardId = $(event.target).attr('data-cardId'), optionId = $(event.target).attr('data-optionId'), answeredCards = getAnsweredCards(), allCards)
     if (!wrongId) {
       $(event.target).addClass('correct')
@@ -63,13 +61,19 @@ function optionListener(event) {
   }
 }
 
+
 function drawOptions({ cardId, options }) {
-  const optionsContainerElement = $('#options-container').empty().bind('click', optionListener);
+  const optionsContainerElement = $('#options-container')
+    .empty()
+    .off()
+    .on('click', optionListener);
 
   $('#next-unanswered-button')
-    .on('click', nextButtonListener)
+    .off()
+    .on('click',
+      nextButtonListener
+    )
     .addClass('disabled');
-
 
   options.forEach((option, optionIndex) => {
     const optionElement = $('<div>')
@@ -80,13 +84,11 @@ function drawOptions({ cardId, options }) {
       .attr('id', `option-${optionIndex}`);
 
     $(optionsContainerElement).append(optionElement);
-
   });
 }
 
 
 /**
- * 
  * @param {Object<number, boolean|null>} cardsStateList
  * @param {number} openedCardId
  * @param {object} allCards
@@ -111,7 +113,7 @@ function drawTabList(groupList, selectedGroup, openedCardId) {
     }
   }
 }
-// jquery
+
 
 function drawCardList(cardsStateList, openedCardId) {
   $('#card-list-container').empty();
@@ -126,7 +128,7 @@ function drawCardList(cardsStateList, openedCardId) {
     if (cardsStateList[cardId]['isCorrect'] === true) { cardLinkElement.addClass('correct') }
     else if (cardsStateList[cardId]['isCorrect'] === false) { cardLinkElement.addClass('wrong') }
     console.log(`cardId: ${typeof (cardId)} openedCardId: ${typeof (openedCardId)}`)
-    if (openedCardId === cardId) {
+    if (parseInt(openedCardId) === cardId) {
       console.log(`currently selected card: ${cardId}`)
       cardLinkElement.addClass('current')
       cardLinkElement.removeClass('correct wrong')
