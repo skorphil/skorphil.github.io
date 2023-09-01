@@ -42,7 +42,7 @@ function drawOptions({ cardId, options, correctId = null, wrongId = null, isButt
   if (isButtonDisabled) {
     nextUnansweredButton.addClass('disabled')
   } else if (!isButtonDisabled) {
-    nextUnansweredButton.bind('click', nextButtonListener)
+    nextUnansweredButton.on('click', nextButtonListener)
       .removeClass('disabled');
   };
 
@@ -68,7 +68,7 @@ function drawOptions({ cardId, options, correctId = null, wrongId = null, isButt
           'correctId': correctId
         })
       }
-      optionElement.bind('click', optionListener);
+      optionElement.on('click', optionListener);
 
     }
   });
@@ -113,7 +113,7 @@ function drawTabList(groupList, selectedGroup, openedCardId) {
         drawTabList(getErrorGroupList(allCards), groupNumber, openedCardId)
       }
       groupLinkElement.removeClass('active');
-      groupLinkElement.bind('click', groupTabListener);
+      groupLinkElement.on('click', groupTabListener);
     }
   }
 }
@@ -128,7 +128,7 @@ function drawCardList(cardsStateList, openedCardId) {
     const cardLinkElement = $('<div>')
       .text(cardsStateList[cardId]['numberPerGroup'])
       .addClass(`card-link card-${cardId}`)
-      .bind('click', function () {
+      .on('click', function () {
         drawNewPage(cardId, allCards, answeredCards = getAnsweredCards())
       });
 

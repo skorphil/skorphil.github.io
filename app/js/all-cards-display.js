@@ -29,89 +29,59 @@ function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
   $('#question-text').html(question)
 
   // create options
-  const { isAnswered,
-    isfirstAnswerCorrect,
-    correctAnswer,
-    firstSelectedOption } = getCardAnswerHistory(cardId, allCards)
+  drawOptions({
+    'options': options,
+    'cardId': cardId
+  })
 
-  if (isAnswered) {
-    if (isfirstAnswerCorrect) {
-      drawOptions({
-        'options': options,
-        'cardId': cardId,
-        'correctId': correctAnswer - 1,
-        'isButtonDisabled': false,
-      })
-    } else if (!isfirstAnswerCorrect) {
-      drawOptions({
-        'options': options,
-        'cardId': cardId,
-        'correctId': correctAnswer - 1,
-        'wrongId': firstSelectedOption,
-        'isButtonDisabled': false,
-      })
-    }
-  } else if (!isAnswered) {
-    drawOptions({
-      'options': options,
-      'cardId': cardId
-    })
-  }
 };
-
-
-function drawOptions({ cardId, options, correctId = null, wrongId = null, isButtonDisabled = true }) {
-
-  const nextUnansweredButton = $('#next-unanswered-button');
-  const optionsContainerElement = $('#options-container').empty();
-
-  if (isButtonDisabled) {
-    nextUnansweredButton.addClass('disabled')
-  } else if (!isButtonDisabled) {
-    nextUnansweredButton.bind('click', nextButtonListener);
-    nextUnansweredButton.removeClass('disabled');
-  };
-
-  options.forEach((option, optionIndex) => {
-    const optionElement = $('<div>')
-      .text(option)
-      .addClass('singleOption disable-hover')
-      .attr('id', `option-${optionIndex}`);
-
-    $(optionsContainerElement).append(optionElement);
-
-    if (correctId === null) {
-      optionElement.removeClass('disable-hover');
-      const optionListener = function () {
-        // console.log(`answer - ${cardContent.answer}, chosenOption - ${optionIndex}`)
-
-        // TODO remove reload from answerCard
-        const { correctId, wrongId } = answerCard(cardId, optionIndex, answeredCards = getAnsweredCards(), allCards)
-        drawOptions({
-          'options': options,
-          isButtonDisabled: false,
-          'wrongId': wrongId,
-          'correctId': correctId
-        })
-      }
-      optionElement.bind('click', optionListener);
-
-    }
-  });
-
-  if (correctId !== null) {
-    $(`#option-${correctId}`).addClass('correct');
-  };
-  if (wrongId !== null) {
-    $(`#option-${wrongId}`).addClass('error');
-  }
-}
 
 function nextButtonListener() {
   const nextCardId = getNextUnansweredId(allCards, getAnsweredCards())
   if (nextCardId) {
     drawNewPage(nextCardId, allCards, answeredCards = getAnsweredCards())
   } else throw console.error(`Wrong card ID: ${nextCardId}`);
+}
+
+
+function optionListener(event) {
+  if (event.target.className != 'singleOption') return
+  else if (event.target.className == 'singleOption') {
+    console.log('is singleOption')
+
+    $('#options-container > .singleOption').addClass('disable-hover');
+    $('#next-unanswered-button').removeClass('disabled');
+
+
+    let { wrongId, correctId } = logAnswer(cardId = $(event.target).attr('data-cardId'), optionId = $(event.target).attr('data-optionId'), answeredCards = getAnsweredCards(), allCards)
+    if (!wrongId) {
+      $(event.target).addClass('correct')
+    } else {
+      $(event.target).addClass('error')
+      $(`#options-container > .singleOption[data-optionId=${correctId}]`).addClass('correct')
+    }
+  }
+}
+
+function drawOptions({ cardId, options }) {
+  const optionsContainerElement = $('#options-container').empty().bind('click', optionListener);
+
+  $('#next-unanswered-button')
+    .on('click', nextButtonListener)
+    .addClass('disabled');
+
+
+  options.forEach((option, optionIndex) => {
+    const optionElement = $('<div>')
+      .text(option)
+      .addClass('singleOption')
+      .attr('data-optionId', optionIndex)
+      .attr('data-cardId', cardId)
+      .attr('id', `option-${optionIndex}`);
+
+    $(optionsContainerElement).append(optionElement);
+
+  });
 }
 
 

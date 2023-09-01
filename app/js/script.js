@@ -59,7 +59,7 @@ function upgradeLocalStorageFormat(legacyProgressObj) {
  * @param {(Object.<number, [boolean, number]>|null)} answeredCardsList
  * @returns {Object}
  */
-function getContentForCard(cardId, allCards, answeredCardsList, drawButton) {
+function getContentForCard(cardId, allCards) {
   const cardData = {
     'group': allCards[cardId].group,
     'numberPerGroup': allCards[cardId].numberPerGroup,
@@ -127,7 +127,7 @@ function getNextErrorId(answeredCards = getAnsweredCards()) {
 }
 
 
-function logAnswer(cardId, optionId, answeredCards = getAnsweredCards(), allCards) {
+function logAnswer(cardId, optionId, answeredCards = getAnsweredCards(), allCards = allCards) {
   const date = Date.now();
 
   if (!answeredCards) {
