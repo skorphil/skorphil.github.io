@@ -33,7 +33,6 @@ function drawCard({ group, numberPerGroup, img, question, options, cardId }) {
     'options': options,
     'cardId': cardId
   })
-
 };
 
 function nextButtonListener() {

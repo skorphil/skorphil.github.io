@@ -2,6 +2,41 @@ const cardsFile = 'app/content/cards.json'
 let allCards = {}
 
 
+function setDue(previous, evaluation) {
+  /**
+   * Based on SM-2 algorithm
+   * See https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
+   */
+  let n, efactor, interval
+
+  if (previous == null) {
+    previous = { efactor: 3.2, interval: 0.0 } // increased initial efactor to make intervals grow faster
+  }
+
+  efactor = Math.max(1.3, previous.efactor + (0.1 - (5 - evaluation.score) * (0.08 + (5 - evaluation.score) * 0.02)))
+
+  if (evaluation.score < 3) {
+    n = 0
+    interval = 30
+  } else {
+    if (previous.n == null) {
+      previous.n = -100 // add negative numbers as a flag for non-mistaken cards
+    }
+    n = previous.n + 1
+
+    if (previous.n == 0) {
+      interval = 70
+    } else if (previous.n < 0) { // huge interval for initially correct cards
+      interval = 600
+    } else {
+      interval = Math.ceil(previous.interval * efactor)
+    }
+  }
+
+  return { n, efactor, interval }
+}
+
+
 function getAnsweredCards() {
   const legacyVar = 'answeredCardsAll'
   const newVar = 'answeredCards'

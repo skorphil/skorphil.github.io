@@ -60,6 +60,88 @@ localStorage new progress structure (24 jul)
 
 @startjson
 {
+  "answeredCards (list of answered questions)": {
+        "1 (number of question)": {
+            "2020-12-15": {
+                "answeredId" :"0",
+                "isCorrect": "false"
+            },
+            "2020-12-15": {
+                "answeredId" :"1",
+                "isCorrect": "true"
+            }
+        },
+        "2": {
+            "2020-12-15": {
+                "answeredId" :"1",
+                "isCorrect": "false"
+            }
+        }
+    }  
+}
+@endjson
+
+
+@startjson
+{
+  "answeredCards": {
+        "1 (number of question)": {
+            "due": "datestamp",
+            "log": [
+                {
+                    "date": "datestamp",
+                    "n": "0",
+                    "efactor": 3,
+                    "interval": 30,
+                    "answerId" :"0",
+                    "score": "1"
+                },
+                { 
+                    "datestamp": "datestamp", 
+                    "n": "0",
+                    "efactor": 3,
+                    "interval": 60,
+                    "answerId" :"1",
+                    "score": "0"
+                },
+                { 
+                    "datestamp": "datestamp", 
+                    "n": "0",
+                    "efactor": 3,
+                    "interval": 234,
+                    "answerId" :"1",
+                    "score": "1"
+                }
+            ]
+        },
+        "2": {
+            "due": "datestamp",
+            "log": [
+                {
+                    "date": "datestamp",
+                    "n": "0",
+                    "efactor": 3,
+                    "interval": 30,
+                    "answerId" :"0",
+                    "score": "1"
+                },
+                { 
+                    "datestamp": "datestamp", 
+                    "n": "0",
+                    "efactor": 3,
+                    "interval": 60,
+                    "answerId" :"1",
+                    "score": "0"
+                }
+            ]
+        }
+    }  
+}
+@endjson
+
+
+@startjson
+{
     "user": "Orange Panda",
     "questionsMarathon": [
         {
